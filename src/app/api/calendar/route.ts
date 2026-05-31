@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { type ApiContext, withLogging } from "@/shared/lib/api/withLogging";
+import { fetchAllRows } from "@/shared/lib/supabase/pagination";
 import {
   type CalendarEvent,
   createAssignmentTaskEvent,
@@ -30,17 +31,25 @@ const fetchCourses = async (supabase: ApiContext["supabase"], workspace: string)
 };
 
 const fetchRetakes = async (supabase: ApiContext["supabase"], workspace: string): Promise<CalendarRetakeData[]> => {
-  const { data, error } = await supabase
-    .from("RetakeAssignments")
-    .select(`
-      id, current_scheduled_date, status,
-      student:Users!RetakeAssignments_student_id_fkey!inner(name, workspace),
-      exam:Exams!inner(id, name, exam_number, course:Courses!inner(id, name))
-    `)
-    .eq("student.workspace", workspace);
+  const data = await fetchAllRows<{
+    id: string;
+    current_scheduled_date: string | null;
+    status: string;
+    exam: unknown;
+    student: unknown;
+  }>(() =>
+    supabase
+      .from("RetakeAssignments")
+      .select(`
+        id, current_scheduled_date, status,
+        student:Users!RetakeAssignments_student_id_fkey!inner(name, workspace),
+        exam:Exams!inner(id, name, exam_number, course:Courses!inner(id, name))
+      `)
+      .eq("student.workspace", workspace)
+      .order("id", { ascending: true }),
+  );
 
-  if (error) throw error;
-  return (data || []).map((r) => ({
+  return data.map((r) => ({
     id: r.id,
     current_scheduled_date: r.current_scheduled_date,
     status: r.status,
@@ -53,17 +62,25 @@ const fetchAssignmentTasks = async (
   supabase: ApiContext["supabase"],
   workspace: string,
 ): Promise<CalendarAssignmentTaskData[]> => {
-  const { data, error } = await supabase
-    .from(STUDENT_ASSIGNMENT_TABLE)
-    .select(`
-      id, current_scheduled_date, status,
-      student:Users!StudentAssignments_student_id_fkey!inner(name, workspace),
-      assignment:Assignments!inner(id, name, course:Courses!inner(id, name))
-    `)
-    .eq("student.workspace", workspace);
+  const data = await fetchAllRows<{
+    id: string;
+    current_scheduled_date: string | null;
+    status: string;
+    assignment: unknown;
+    student: unknown;
+  }>(() =>
+    supabase
+      .from(STUDENT_ASSIGNMENT_TABLE)
+      .select(`
+        id, current_scheduled_date, status,
+        student:Users!StudentAssignments_student_id_fkey!inner(name, workspace),
+        assignment:Assignments!inner(id, name, course:Courses!inner(id, name))
+      `)
+      .eq("student.workspace", workspace)
+      .order("id", { ascending: true }),
+  );
 
-  if (error) throw error;
-  return (data || []).map((r) => ({
+  return data.map((r) => ({
     id: r.id,
     current_scheduled_date: r.current_scheduled_date,
     status: r.status,

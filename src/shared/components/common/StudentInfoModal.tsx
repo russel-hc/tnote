@@ -236,7 +236,7 @@ export default function StudentInfoModal({
                       </span>
                     </div>
                     <Badge
-                      variant={item.status === "완료" ? "success" : item.status === "미흡" ? "warning" : "danger"}
+                      variant={item.status === "완료" ? "success" : item.status === "검사예정" ? "warning" : "danger"}
                       size="xs">
                       {item.status}
                     </Badge>

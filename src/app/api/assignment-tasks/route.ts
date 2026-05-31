@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { type ApiContext, withLogging } from "@/shared/lib/api/withLogging";
+import { fetchAllRows } from "@/shared/lib/supabase/pagination";
 import {
   getDefaultStudentAssignmentDate,
   STUDENT_ASSIGNMENT_HISTORY_TABLE,
@@ -96,33 +97,26 @@ const handleGet = async ({ request, supabase, session }: ApiContext) => {
     studentId = session.userId;
   }
 
-  let query = supabase
-    .from(STUDENT_ASSIGNMENT_TABLE)
-    .select(`
-      *,
-      assignment:Assignments!inner(id, name, course:Courses!inner(id, name, workspace)),
-      student:Users!StudentAssignments_student_id_fkey!inner(
-        id, phone_number, name, school, workspace, parent_phone_number,
-        tags:StudentTagAssignments(id, tag_id, start_date, end_date, tag:StudentTags(id, name, color))
-      )
-    `)
-    .eq("student.workspace", session.workspace);
+  const data = await fetchAllRows(() => {
+    let query = supabase
+      .from(STUDENT_ASSIGNMENT_TABLE)
+      .select(`
+        *,
+        assignment:Assignments!inner(id, name, course:Courses!inner(id, name, workspace)),
+        student:Users!StudentAssignments_student_id_fkey!inner(
+          id, phone_number, name, school, workspace, parent_phone_number,
+          tags:StudentTagAssignments(id, tag_id, start_date, end_date, tag:StudentTags(id, name, color))
+        )
+      `)
+      .eq("student.workspace", session.workspace)
+      .order("id", { ascending: true });
 
-  if (courseId) {
-    query = query.eq("assignment.course_id", courseId);
-  }
-  if (studentId) {
-    query = query.eq("student_id", studentId);
-  }
-  if (status) {
-    query = query.eq("status", status);
-  }
+    if (courseId) query = query.eq("assignment.course_id", courseId);
+    if (studentId) query = query.eq("student_id", studentId);
+    if (status) query = query.eq("status", status);
 
-  const { data, error } = await query;
-
-  if (error) {
-    throw error;
-  }
+    return query;
+  });
 
   return NextResponse.json({ data });
 };

@@ -52,7 +52,7 @@ interface ClinicHistoryInfo {
 
 export interface AssignmentHistoryInfo {
   id: string;
-  status: "완료" | "미흡" | "미제출" | "검사예정";
+  status: "완료" | "미흡" | "미제출" | "검사예정" | "결석";
   assignment: {
     id: string;
     name: string;

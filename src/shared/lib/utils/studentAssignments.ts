@@ -12,11 +12,12 @@ const SUBMISSION_STATUS_TO_STUDENT_ASSIGNMENT_STATUS: Record<AssignmentSubmissio
   미흡: "insufficient",
   미제출: "not_submitted",
   검사예정: "pending",
+  결석: "absent",
 };
 
 const STUDENT_ASSIGNMENT_STATUS_TO_SUBMISSION_STATUS: Record<StudentAssignmentStatus, AssignmentSubmissionStatus> = {
   pending: "검사예정",
-  absent: "검사예정",
+  absent: "결석",
   completed: "완료",
   insufficient: "미흡",
   not_submitted: "미제출",

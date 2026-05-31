@@ -25,7 +25,7 @@ interface ExamScore {
 
 interface Assignment {
   id: string;
-  status: "완료" | "미흡" | "미제출" | "검사예정";
+  status: "완료" | "미흡" | "미제출" | "검사예정" | "결석";
   exam: {
     id: string;
     name: string;
@@ -49,8 +49,7 @@ export const ExamResultCard = ({ examScore, assignment }: ExamResultCardProps) =
 
   const getAssignmentVariant = (status: string): "success" | "warning" | "danger" | "info" => {
     if (status === "완료") return "success";
-    if (status === "미흡") return "warning";
-    if (status === "검사예정") return "info";
+    if (status === "검사예정") return "warning";
     return "danger";
   };
 
