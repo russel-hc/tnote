@@ -3,7 +3,7 @@ export { Badge, StatusBadge } from "./badge";
 export { Button } from "./button";
 export { ConfirmDialogProvider, useConfirm } from "./confirmDialog";
 export { EmptyState } from "./emptyState";
-export { FormCheckbox, FormCheckboxGroup } from "./formCheckbox";
+export { FormCheckbox } from "./formCheckbox";
 export { FormInput } from "./formInput";
 export { FormSelect } from "./formSelect";
 export { FormTextarea } from "./formTextarea";
@@ -14,14 +14,6 @@ export { SearchInput } from "./searchInput";
 export { SegmentedControl } from "./segmentedControl";
 export { Select } from "./select";
 export type { SkeletonColumnDef } from "./skeleton";
-export {
-  Skeleton,
-  SkeletonAvatar,
-  SkeletonButton,
-  SkeletonCard,
-  SkeletonSpinner,
-  SkeletonTable,
-  SkeletonText,
-} from "./skeleton";
+export { Skeleton, SkeletonSpinner, SkeletonTable } from "./skeleton";
 export { SlidePanel } from "./slidePanel";
 export { Textarea } from "./textarea";

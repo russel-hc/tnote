@@ -2,7 +2,7 @@ import { atom } from "jotai";
 import { createWorkflowFilterAtoms } from "@/shared/lib/workflow";
 import type { Retake } from "@/shared/types";
 
-export type { Course, Exam, Retake, RetakeHistory as History } from "@/shared/types";
+export type { Exam, Retake, RetakeHistory as History } from "@/shared/types";
 
 export interface AssignStudent {
   id: string;

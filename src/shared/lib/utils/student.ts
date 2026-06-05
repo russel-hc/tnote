@@ -1,24 +1,3 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
-
-export const validateStudents = async (
-  supabase: SupabaseClient,
-  workspace: string,
-  studentIds: string[],
-): Promise<{ valid: boolean; students: { id: string }[] | null; error: string | null }> => {
-  const { data: students } = await supabase
-    .from("Users")
-    .select("id")
-    .eq("role", "student")
-    .eq("workspace", workspace)
-    .in("id", studentIds);
-
-  if (!students || students.length !== studentIds.length) {
-    return { valid: false, students: null, error: "일부 학생을 찾을 수 없습니다." };
-  }
-
-  return { valid: true, students, error: null };
-};
-
 export const getAge = (birthYear: number | null | undefined): number => {
   if (!birthYear) return 0;
   const currentYear = new Date().getFullYear();

@@ -81,23 +81,6 @@ interface RetakeHistoryInfo {
   };
 }
 
-interface AssignmentTaskHistoryInfo {
-  id: string;
-  status: "pending" | "completed" | "absent" | "insufficient" | "not_submitted";
-  managementStatus: string;
-  scheduledDate: string | null;
-  postponeCount: number;
-  absentCount: number;
-  assignment: {
-    id: string;
-    name: string;
-    course: {
-      id: string;
-      name: string;
-    };
-  };
-}
-
 interface ConsultationHistoryInfo {
   id: string;
   title: string;
@@ -142,7 +125,7 @@ interface StudentInfo {
   tags: TagAssignmentInfo[];
 }
 
-export type { ExamScoreInfo, RetakeHistoryInfo, AssignmentTaskHistoryInfo };
+export type { ExamScoreInfo, RetakeHistoryInfo };
 
 export interface StudentDetail {
   student: StudentInfo;
@@ -151,7 +134,6 @@ export interface StudentDetail {
   clinicHistory: ClinicHistoryInfo[];
   assignmentHistory: AssignmentHistoryInfo[];
   retakeHistory: RetakeHistoryInfo[];
-  assignmentTaskHistory: AssignmentTaskHistoryInfo[];
   consultationHistory: ConsultationHistoryInfo[];
   messageHistory: MessageHistoryInfo[];
 }
@@ -175,9 +157,6 @@ export const useStudentDetail = (studentId: string | null) => {
         examScores: detail.examScores.filter((s) => activeCourseIds.has(s.exam.course.id)),
         assignmentHistory: detail.assignmentHistory.filter((a) => activeCourseIds.has(a.assignment.course.id)),
         retakeHistory: detail.retakeHistory.filter((r) => activeCourseIds.has(r.exam.course.id)),
-        assignmentTaskHistory: (detail.assignmentTaskHistory || []).filter((t) =>
-          activeCourseIds.has(t.assignment.course.id),
-        ),
       };
     },
     enabled: !!studentId,

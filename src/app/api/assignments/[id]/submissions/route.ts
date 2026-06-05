@@ -41,20 +41,8 @@ const handleGet = async ({ supabase, session, params }: ApiContext) => {
   });
 };
 
-const handlePost = async (_context: ApiContext) => {
-  return NextResponse.json(
-    { error: "이 페이지에서는 제출 현황을 변경할 수 없습니다. 과제 관리 페이지에서 변경해주세요." },
-    { status: 403 },
-  );
-};
-
 export const GET = withLogging(handleGet, {
   resource: "assignment-submissions",
   action: "read",
-  allowedRoles: ["owner", "admin"],
-});
-export const POST = withLogging(handlePost, {
-  resource: "assignment-submissions",
-  action: "create",
   allowedRoles: ["owner", "admin"],
 });

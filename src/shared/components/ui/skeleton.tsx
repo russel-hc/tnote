@@ -6,22 +6,6 @@ export function Skeleton({ className = "" }: SkeletonProps) {
   return <div className={`animate-pulse rounded-radius-200 bg-components-fill-standard-tertiary ${className}`} />;
 }
 
-export function SkeletonText({ className = "" }: SkeletonProps) {
-  return <Skeleton className={`h-4 ${className}`} />;
-}
-
-export function SkeletonButton({ className = "" }: SkeletonProps) {
-  return <Skeleton className={`h-10 rounded-radius-300 ${className}`} />;
-}
-
-export function SkeletonCard({ className = "" }: SkeletonProps) {
-  return <Skeleton className={`rounded-radius-500 ${className}`} />;
-}
-
-export function SkeletonAvatar({ className = "" }: SkeletonProps) {
-  return <Skeleton className={`size-10 rounded-full ${className}`} />;
-}
-
 interface SkeletonSpinnerProps {
   className?: string;
   size?: "sm" | "md" | "lg";

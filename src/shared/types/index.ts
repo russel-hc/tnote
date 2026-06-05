@@ -255,13 +255,6 @@ export interface CalendarEvent {
 
 export type RecipientType = "student" | "parent" | "both";
 
-export interface SendMessageRequest {
-  recipientType: RecipientType;
-  recipientIds: string[];
-  text: string;
-  subject?: string;
-}
-
 export interface SendMessageResponse {
   success: boolean;
   data?: {

@@ -118,29 +118,10 @@ const handleGet = async ({ supabase, session, params }: ApiContext) => {
         `)
       .eq("student_id", studentId)
       .eq("exam.course.workspace", session.workspace),
-    supabase
-      .from(STUDENT_ASSIGNMENT_TABLE)
-      .select(`
-          id,
-          status,
-          current_scheduled_date,
-          postpone_count,
-          absent_count,
-          assignment:Assignments!inner(id, name, course:Courses!inner(id, name, workspace))
-        `)
-      .eq("student_id", studentId)
-      .eq("assignment.course.workspace", session.workspace),
   ] as const;
 
-  const [
-    tagResult,
-    enrollmentResult,
-    examScoreResult,
-    clinicResult,
-    assignmentResult,
-    retakeResult,
-    assignmentTaskResult,
-  ] = await Promise.all(baseQueries);
+  const [tagResult, enrollmentResult, examScoreResult, clinicResult, assignmentResult, retakeResult] =
+    await Promise.all(baseQueries);
 
   if (tagResult.error) throw tagResult.error;
   if (enrollmentResult.error) throw enrollmentResult.error;
@@ -148,7 +129,6 @@ const handleGet = async ({ supabase, session, params }: ApiContext) => {
   if (clinicResult.error) throw clinicResult.error;
   if (assignmentResult.error) throw assignmentResult.error;
   if (retakeResult.error) throw retakeResult.error;
-  if (assignmentTaskResult.error) throw assignmentTaskResult.error;
 
   const [consultationResult, messageResult] = await Promise.all([
     supabase
@@ -317,8 +297,6 @@ const handleGet = async ({ supabase, session, params }: ApiContext) => {
       return new Date(b.scheduledDate).getTime() - new Date(a.scheduledDate).getTime();
     });
 
-  const assignmentTaskHistory: [] = [];
-
   interface ConsultationRow {
     id: string;
     title: string;
@@ -375,7 +353,6 @@ const handleGet = async ({ supabase, session, params }: ApiContext) => {
       clinicHistory,
       assignmentHistory,
       retakeHistory,
-      assignmentTaskHistory,
       consultationHistory,
       messageHistory,
     },

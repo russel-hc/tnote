@@ -18,20 +18,3 @@ export function FormCheckbox({ label, className = "", ...props }: FormCheckboxPr
     </label>
   );
 }
-
-interface FormCheckboxGroupProps {
-  label: string;
-  required?: boolean;
-  children: React.ReactNode;
-}
-
-export function FormCheckboxGroup({ label, required = false, children }: FormCheckboxGroupProps) {
-  return (
-    <div className="flex flex-col gap-spacing-200">
-      <label className="block font-semibold text-content-standard-primary text-label">
-        {label} {required && <span className="text-core-status-negative">*</span>}
-      </label>
-      <div className="flex flex-col gap-spacing-200">{children}</div>
-    </div>
-  );
-}
