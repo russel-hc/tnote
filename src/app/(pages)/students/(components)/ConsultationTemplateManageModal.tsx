@@ -52,7 +52,7 @@ export default function ConsultationTemplateManageModal({
               className="flex items-start justify-between gap-spacing-300 rounded-radius-300 border border-line-outline bg-components-fill-standard-secondary p-spacing-400">
               <div className="flex min-w-0 flex-1 flex-col gap-spacing-100">
                 <span className="font-semibold text-body text-content-standard-primary">{template.name}</span>
-                <p className="line-clamp-2 text-footnote text-content-standard-tertiary">{template.content}</p>
+                <p className="line-clamp-2 text-content-standard-tertiary text-footnote">{template.content}</p>
               </div>
               <Button
                 variant="danger"

@@ -57,7 +57,6 @@ export const QUERY_KEYS = {
     forAssign: (courseId: string) => ["exams-for-assign", courseId] as const,
     scores: (examId: string) => ["exams", "scores", examId] as const,
     scoresForAssign: (examId: string) => ["exam-scores-for-assign", examId] as const,
-    assignments: (examId: string) => ["exams", "assignments", examId] as const,
     export: (examId: string) => ["exam-export", examId] as const,
   },
   consultations: {

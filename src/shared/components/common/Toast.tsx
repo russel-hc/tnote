@@ -29,7 +29,7 @@ export function ToastContainer() {
   };
 
   return (
-    <div className="pointer-events-none fixed right-4 bottom-4 z-70 flex flex-col gap-spacing-300 md:bottom-8 md:right-8">
+    <div className="pointer-events-none fixed right-4 bottom-4 z-70 flex flex-col gap-spacing-300 md:right-8 md:bottom-8">
       {toasts.map((toast) => (
         <ToastItem key={toast.id} toast={toast} onRemove={removeToast} />
       ))}

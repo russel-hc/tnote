@@ -43,13 +43,14 @@ const handlePatch = async ({ request, supabase, session, params }: ApiContext) =
     throw updateError;
   }
 
-  await supabase.from("RetakeHistory").insert({
+  const { error: historyError } = await supabase.from("RetakeHistory").insert({
     retake_assignment_id: id,
     action_type: "management_status_change",
     previous_management_status: retake.management_status,
     new_management_status: management_status,
     performed_by: session.userId,
   });
+  if (historyError) throw historyError;
 
   return NextResponse.json({ success: true });
 };

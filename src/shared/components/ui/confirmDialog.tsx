@@ -76,8 +76,8 @@ export function ConfirmDialogProvider({ children }: { children: ReactNode }) {
             </>
           }>
           <div className="flex flex-col gap-spacing-200">
-            <p className="text-body text-content-standard-primary whitespace-pre-line">{state.message}</p>
-            {state.description && <p className="text-footnote text-content-standard-tertiary">{state.description}</p>}
+            <p className="whitespace-pre-line text-body text-content-standard-primary">{state.message}</p>
+            {state.description && <p className="text-content-standard-tertiary text-footnote">{state.description}</p>}
           </div>
         </Modal>
       )}
