@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import { type ApiContext, withLogging } from "@/shared/lib/api/withLogging";
+import { isValidDateString } from "@/shared/lib/utils/date";
 import { STUDENT_ASSIGNMENT_HISTORY_TABLE, STUDENT_ASSIGNMENT_TABLE } from "@/shared/lib/utils/studentAssignments";
 
 const handlePatch = async ({ request, supabase, session, params }: ApiContext) => {
   const id = params?.id;
   const { newDate } = await request.json();
 
-  if (!newDate) {
-    return NextResponse.json({ error: "새로운 날짜를 입력해주세요." }, { status: 400 });
+  if (!isValidDateString(newDate)) {
+    return NextResponse.json({ error: "올바른 날짜 형식(YYYY-MM-DD)이 아닙니다." }, { status: 400 });
   }
 
   const { data: current, error: fetchError } = await supabase

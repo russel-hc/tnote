@@ -14,8 +14,12 @@ const handlePost = async ({ request, supabase, session }: ApiContext) => {
     return NextResponse.json({ error: "필수 정보를 입력해주세요." }, { status: 400 });
   }
 
-  if (!studentIds || !Array.isArray(studentIds)) {
+  if (!studentIds || !Array.isArray(studentIds) || studentIds.length === 0) {
     return NextResponse.json({ error: "필수 정보를 입력해주세요." }, { status: 400 });
+  }
+
+  if (studentIds.length > 100) {
+    return NextResponse.json({ error: "한 번에 최대 100명까지 가능합니다." }, { status: 400 });
   }
 
   const { data: assignment } = await supabase

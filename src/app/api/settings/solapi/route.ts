@@ -53,8 +53,12 @@ const handlePatch = async ({ request, supabase, session }: ApiContext) => {
 
   return NextResponse.json({
     data: {
-      apiKey: updateData.solapi_api_key ?? undefined,
-      apiSecret: updateData.solapi_api_secret ?? undefined,
+      apiKey: updateData.solapi_api_key
+        ? `${updateData.solapi_api_key.slice(0, 4)}${"*".repeat(Math.max(0, updateData.solapi_api_key.length - 4))}`
+        : null,
+      apiSecret: updateData.solapi_api_secret
+        ? `${"*".repeat(Math.max(0, updateData.solapi_api_secret.length - 4))}${updateData.solapi_api_secret.slice(-4)}`
+        : null,
       isConfigured: !!(updateData.solapi_api_key && updateData.solapi_api_secret),
     },
   });

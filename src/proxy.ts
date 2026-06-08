@@ -86,7 +86,7 @@ export const proxy = async (request: NextRequest): Promise<NextResponse> => {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  const role = user.user_metadata?.role as string | undefined;
+  const role = (user.app_metadata?.role ?? user.user_metadata?.role) as string | undefined;
   if (role === "student") {
     if (pathname.startsWith("/api/") && !isStudentAllowedApi(pathname)) {
       return NextResponse.json({ error: "접근 권한이 없습니다." }, { status: 403 });

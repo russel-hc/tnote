@@ -41,6 +41,10 @@ const handlePost = async ({ request, supabase, session }: ApiContext) => {
     return NextResponse.json({ error: "재시험 정보가 필요합니다." }, { status: 400 });
   }
 
+  if (retakeIds.length > 1000) {
+    return NextResponse.json({ error: "한 번에 최대 1000건까지 발송할 수 있습니다." }, { status: 400 });
+  }
+
   if (!validateRecipientType(recipientType)) {
     return NextResponse.json({ error: "올바른 수신자 유형이 아닙니다." }, { status: 400 });
   }

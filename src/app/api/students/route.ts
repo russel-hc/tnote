@@ -164,6 +164,8 @@ const handlePost = async ({ request, supabase, session }: ApiContext) => {
     email_confirm: true,
     user_metadata: {
       name: name.trim(),
+    },
+    app_metadata: {
       role: "student",
       workspace: session.workspace,
     },
