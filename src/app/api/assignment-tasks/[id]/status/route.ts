@@ -37,7 +37,7 @@ const handlePatch = async ({ request, supabase, session, params }: ApiContext) =
     throw updateError;
   }
 
-  await supabase.from(STUDENT_ASSIGNMENT_HISTORY_TABLE).insert({
+  const { error: historyError } = await supabase.from(STUDENT_ASSIGNMENT_HISTORY_TABLE).insert({
     student_assignment_id: id,
     action_type: "status_change",
     previous_status: task.status,
@@ -45,6 +45,7 @@ const handlePatch = async ({ request, supabase, session, params }: ApiContext) =
     note: note || null,
     performed_by: session.userId,
   });
+  if (historyError) throw historyError;
   return NextResponse.json({ success: true });
 };
 

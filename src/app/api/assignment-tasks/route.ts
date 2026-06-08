@@ -81,7 +81,8 @@ const handlePost = async ({ request, supabase, session }: ApiContext) => {
       performed_by: session.userId,
     }));
 
-    await supabase.from(STUDENT_ASSIGNMENT_HISTORY_TABLE).insert(historyRecords);
+    const { error: historyError } = await supabase.from(STUDENT_ASSIGNMENT_HISTORY_TABLE).insert(historyRecords);
+    if (historyError) throw historyError;
   }
 
   return NextResponse.json({ success: true, data }, { status: 201 });

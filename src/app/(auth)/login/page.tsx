@@ -164,9 +164,9 @@ export default function LoginPage() {
 
         <div className="relative z-10 flex items-center gap-spacing-200">
           <div className="flex size-10 items-center justify-center rounded-radius-200 bg-core-accent">
-            <span className="font-bold text-solid-white text-label">T</span>
+            <span className="font-bold text-label text-solid-white">T</span>
           </div>
-          <span className="font-bold text-solid-white text-label">Tnote</span>
+          <span className="font-bold text-label text-solid-white">Tnote</span>
         </div>
 
         <div className="relative z-10 flex flex-col gap-spacing-600">

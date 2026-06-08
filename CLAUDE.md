@@ -29,7 +29,7 @@ Notes:
 Every domain row carries a `workspace` column. **Every query must filter by `session.workspace`**, and every insert must stamp it. This is enforced in application code, not (solely) by RLS — forgetting it leaks data across academies. The CRUD factories and most handlers apply `.eq("workspace", session.workspace)` for you; preserve that whenever you touch a query by hand.
 
 ### Auth = Supabase Auth (not custom JWT)
-Despite the README mentioning `JWT_SECRET`, there is **no custom JWT and no `jsonwebtoken` dependency**. Auth is Supabase Auth via cookie sessions (`@supabase/ssr`):
+There is **no custom JWT and no `jsonwebtoken` dependency**. Auth is Supabase Auth via cookie sessions (`@supabase/ssr`):
 - Users have no real email — login maps phone → `` `${phoneNumber}@tnote.local` ``. `getSession()` strips the `@tnote.local` suffix back to a phone number.
 - `role` (`"owner" | "admin" | "student"`) and `workspace` live in Supabase `user_metadata`, read via `getSession()` in `src/shared/lib/supabase/auth.ts`.
 - Centralized request gating lives in **`src/proxy.ts`** (Next.js 16's renamed middleware). It refreshes the Supabase session on every request, returns 401 for unauthenticated API calls / redirects pages to `/login`, and confines `student`-role users to `/`, `/my/*`, and the `/api/my/*` + `/api/auth/*` endpoints. Handlers still re-check auth/roles via `withLogging`.

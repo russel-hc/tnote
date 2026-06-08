@@ -205,6 +205,8 @@ export const sendMessagesWithHistory = async ({
   }
 
   if (historyRecords.length > 0) {
+    // Best-effort audit log: the SMS were already dispatched above, so a failed history
+    // insert must not fail the send result (it would misreport delivered messages as failed).
     await supabase.from("MessageHistory").insert(historyRecords);
   }
 

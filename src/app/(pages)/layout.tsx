@@ -17,7 +17,7 @@ export default function PagesLayout({
     <div className="flex min-h-screen">
       <Sidebar />
       <main
-        className={`min-w-0 flex-1 overflow-x-auto pb-20 transition-[margin] duration-300 print:ml-0 print:pb-0 md:pb-0 ${isCollapsed ? "md:ml-16" : "md:ml-64"}`}>
+        className={`min-w-0 flex-1 overflow-x-auto pb-20 transition-[margin] duration-300 md:pb-0 print:ml-0 print:pb-0 ${isCollapsed ? "md:ml-16" : "md:ml-64"}`}>
         <ErrorBoundary>{children}</ErrorBoundary>
       </main>
     </div>
