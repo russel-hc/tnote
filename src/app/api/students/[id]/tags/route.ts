@@ -121,6 +121,17 @@ const handlePatch = async ({ request, supabase, session, params }: ApiContext) =
     return NextResponse.json({ error: "학생을 찾을 수 없습니다." }, { status: 404 });
   }
 
+  const { data: tag, error: tagError } = await supabase
+    .from("StudentTags")
+    .select("id")
+    .eq("id", tagId)
+    .eq("workspace", session.workspace)
+    .single();
+
+  if (tagError || !tag) {
+    return NextResponse.json({ error: "태그를 찾을 수 없습니다." }, { status: 404 });
+  }
+
   const { data, error } = await supabase
     .from("StudentTagAssignments")
     .update({

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { type ApiContext, withLogging } from "@/shared/lib/api/withLogging";
+import { isValidDateString } from "@/shared/lib/utils/date";
 
 const handleGet = async ({ request, supabase, session, params }: ApiContext) => {
   const clinicId = params?.id;
@@ -45,8 +46,8 @@ const handlePost = async ({ request, supabase, session, params }: ApiContext) =>
   const clinicId = params?.id;
   const { studentIds, date, note } = await request.json();
 
-  if (!studentIds || !Array.isArray(studentIds) || !date) {
-    return NextResponse.json({ error: "학생과 날짜를 선택해주세요." }, { status: 400 });
+  if (!studentIds || !Array.isArray(studentIds) || studentIds.length === 0 || !isValidDateString(date)) {
+    return NextResponse.json({ error: "학생과 날짜(YYYY-MM-DD)를 선택해주세요." }, { status: 400 });
   }
 
   const { data: clinic } = await supabase
@@ -58,6 +59,17 @@ const handlePost = async ({ request, supabase, session, params }: ApiContext) =>
 
   if (!clinic) {
     return NextResponse.json({ error: "클리닉을 찾을 수 없습니다." }, { status: 404 });
+  }
+
+  const { data: validStudents } = await supabase
+    .from("Users")
+    .select("id")
+    .in("id", studentIds)
+    .eq("workspace", session.workspace)
+    .eq("role", "student");
+  const validStudentIds = new Set((validStudents ?? []).map((s) => s.id));
+  if (studentIds.some((studentId: string) => !validStudentIds.has(studentId))) {
+    return NextResponse.json({ error: "일부 학생을 찾을 수 없습니다." }, { status: 404 });
   }
 
   const records = studentIds.map((studentId: string) => ({
@@ -92,8 +104,8 @@ const handlePatch = async ({ request, supabase, session, params }: ApiContext) =
 
   const attendees: Attendee[] = body.attendees || (body.studentIds || []).map((id: string) => ({ studentId: id }));
 
-  if (!Array.isArray(attendees) || !date) {
-    return NextResponse.json({ error: "학생 목록과 날짜를 제공해주세요." }, { status: 400 });
+  if (!Array.isArray(attendees) || !isValidDateString(date)) {
+    return NextResponse.json({ error: "학생 목록과 날짜(YYYY-MM-DD)를 제공해주세요." }, { status: 400 });
   }
 
   const { data: clinic } = await supabase
@@ -105,6 +117,20 @@ const handlePatch = async ({ request, supabase, session, params }: ApiContext) =
 
   if (!clinic) {
     return NextResponse.json({ error: "클리닉을 찾을 수 없습니다." }, { status: 404 });
+  }
+
+  const attendeeStudentIds = attendees.map((a) => a.studentId);
+  if (attendeeStudentIds.length > 0) {
+    const { data: validStudents } = await supabase
+      .from("Users")
+      .select("id")
+      .in("id", attendeeStudentIds)
+      .eq("workspace", session.workspace)
+      .eq("role", "student");
+    const validStudentIds = new Set((validStudents ?? []).map((s) => s.id));
+    if (attendeeStudentIds.some((studentId) => !validStudentIds.has(studentId))) {
+      return NextResponse.json({ error: "일부 학생을 찾을 수 없습니다." }, { status: 404 });
+    }
   }
 
   const { data: existingRecords, error: fetchError } = await supabase

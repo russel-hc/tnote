@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/shared/lib/supabase/server";
 import { createLogger } from "@/shared/lib/utils/logger";
 import { validatePassword } from "@/shared/lib/utils/password";
+import { isValidPhoneNumber, removePhoneHyphens } from "@/shared/lib/utils/phone";
 import { checkAuthRateLimit } from "@/shared/lib/utils/rateLimit";
 
 export async function POST(request: Request) {
@@ -39,12 +40,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: passwordValidation.error }, { status: 400 });
     }
 
+    const cleanedPhone = removePhoneHyphens(phoneNumber);
+    if (!isValidPhoneNumber(cleanedPhone)) {
+      await logger.log("warn", 400);
+      await logger.flush();
+      return NextResponse.json({ error: "올바른 전화번호 형식이 아닙니다." }, { status: 400 });
+    }
+
     const supabase = createAdminClient();
 
     const { data: existingUser } = await supabase
       .from("Users")
       .select("phone_number")
-      .eq("phone_number", phoneNumber)
+      .eq("phone_number", cleanedPhone)
       .single();
 
     if (existingUser) {
@@ -64,7 +72,7 @@ export async function POST(request: Request) {
 
     if (workspaceError) throw workspaceError;
 
-    const email = `${phoneNumber}@tnote.local`;
+    const email = `${cleanedPhone}@tnote.local`;
 
     const { data: authUser, error: authError } = await supabase.auth.admin.createUser({
       email,
@@ -72,6 +80,8 @@ export async function POST(request: Request) {
       email_confirm: true,
       user_metadata: {
         name,
+      },
+      app_metadata: {
         role: "owner",
         workspace: newWorkspace.id,
       },
@@ -87,7 +97,7 @@ export async function POST(request: Request) {
       .insert({
         id: authUser.user.id,
         name,
-        phone_number: phoneNumber,
+        phone_number: cleanedPhone,
         role: "owner",
         workspace: newWorkspace.id,
       })

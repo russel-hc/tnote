@@ -8,6 +8,10 @@ export const getTodayKorean = (): string => {
   return `${today.getMonth() + 1}/${today.getDate()}(${days[today.getDay()]})`;
 };
 
+// Validates a YYYY-MM-DD date string (format + real calendar date).
+export const isValidDateString = (value: unknown): value is string =>
+  typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(new Date(value).getTime());
+
 const toDate = (value: Date | string): Date => {
   return value instanceof Date ? value : new Date(value);
 };
