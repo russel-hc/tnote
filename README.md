@@ -1,41 +1,29 @@
 # Tnote
 
-학원 학생 관리 시스템
+학원 학생 관리 시스템 (티노트)
 
 ## 기능
 
-- 학생 관리 (CRUD, 상담 기록)
-- 반/시험 관리
-- 재시험 관리
-- 클리닉 출석 관리
-- 문자 발송 (Solapi)
-- 캘린더
+학생·반·시험·재시험·클리닉 출석·과제·상담 관리, 문자 발송(Solapi), 캘린더
 
 ## 기술 스택
 
-- Next.js 16, React 19, TypeScript
-- Supabase (PostgreSQL)
-- Tailwind CSS, Jotai, React Query
+Next.js 16 · React 19 · TypeScript · Supabase(PostgreSQL) · Tailwind CSS · Jotai · React Query
 
 ## 실행
 
 ```bash
 bun install
+cp .env.example .env.local   # 값 채우기
 bun dev
 ```
 
 ## 환경 변수
 
-`.env.local` 파일에 다음 설정 필요:
+`.env.example` 참고. Supabase 키 3개가 필수이고 Axiom(로깅)은 선택입니다. Solapi 문자 키는 환경변수가 아니라 워크스페이스별로 DB에 저장됩니다.
 
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY`
-- `JWT_SECRET`, `JWT_REFRESH_SECRET`
-- `SOLAPI_API_KEY`, `SOLAPI_API_SECRET`
+## 아키텍처
 
-## 아키텍처 / 소스 오브 트루스
-
-- 데이터 계층은 Supabase(PostgreSQL) 기반이며, 현재 이 저장소 안에서 스키마 마이그레이션을 직접 관리하지는 않습니다.
-- 코드 기준의 핵심 구조는 `src/shared/lib/supabase/auth.ts`, `src/app/api/AGENTS.md`, `src/shared/lib/utils/studentAssignments.ts`를 우선 기준으로 보면 됩니다.
-- 학생 과제 흐름의 기준 경로는 `my/assignments`와 `/api/my/assignments`입니다.
+- 멀티테넌트 — 모든 데이터는 `workspace` 단위로 격리됩니다.
+- 인증은 Supabase Auth(쿠키 세션) 기반이며, 전화번호를 `<번호>@tnote.local` 이메일로 매핑합니다.
+- DB 스키마는 Supabase에서 관리하며 이 저장소에는 마이그레이션이 없습니다.

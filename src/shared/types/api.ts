@@ -13,13 +13,6 @@ export interface ExamWithCourseWorkspace {
   };
 }
 
-export interface ExamWorkspaceOnly {
-  id: string;
-  course: {
-    workspace: string;
-  };
-}
-
 export interface ExamScoreWithStudent {
   student_id: string;
   score: number;
@@ -34,17 +27,6 @@ export interface ExamScoreWithStudent {
 export interface ExamAssignment {
   student_id: string;
   status: string;
-}
-
-export interface AssignmentSubmission {
-  student_id: string;
-  status: string;
-  student?: {
-    id: string;
-    name: string;
-    phone_number: string;
-    school: string | null;
-  };
 }
 
 // --- Calendar-related query results ---

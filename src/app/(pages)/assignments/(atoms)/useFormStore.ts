@@ -1,26 +1,5 @@
-import { atom } from "jotai";
 import { createWorkflowFormAtoms } from "@/shared/lib/workflow";
 
-const {
-  postponeDateAtom,
-  postponeNoteAtom,
-  completeNoteAtom,
-  selectedCourseAtom,
-  selectedStudentsAtom,
-  scheduledDateAtom,
-  assignSearchQueryAtom,
-  editDateAtom,
-} = createWorkflowFormAtoms();
+const { postponeDateAtom, postponeNoteAtom, completeNoteAtom, editDateAtom } = createWorkflowFormAtoms();
 
-export {
-  postponeDateAtom,
-  postponeNoteAtom,
-  completeNoteAtom,
-  selectedCourseAtom,
-  selectedStudentsAtom,
-  scheduledDateAtom,
-  assignSearchQueryAtom,
-  editDateAtom,
-};
-
-export const selectedAssignmentAtom = atom("");
+export { postponeDateAtom, postponeNoteAtom, completeNoteAtom, editDateAtom };

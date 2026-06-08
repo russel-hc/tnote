@@ -1,21 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchWithAuth } from "@/shared/lib/api/fetchWithAuth";
 import { QUERY_KEYS } from "@/shared/lib/queryKeys";
-import type { StudentTag, StudentTagAssignment, TagColor } from "@/shared/types";
-
-interface TagAssignmentWithStudent extends Omit<StudentTagAssignment, "tag"> {
-  student: {
-    id: string;
-    name: string;
-    phone_number: string;
-    school: string | null;
-  };
-}
-
-interface TagWithAssignments {
-  tag: StudentTag;
-  assignments: TagAssignmentWithStudent[];
-}
+import type { StudentTag, TagColor } from "@/shared/types";
 
 export const useTags = () => {
   const { data, isLoading, error } = useQuery({
@@ -111,25 +97,4 @@ export const useDeleteTag = () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.students.all });
     },
   });
-};
-
-export const useTagAssignments = (tagId: string | null) => {
-  const { data, isLoading, error, refetch } = useQuery({
-    queryKey: QUERY_KEYS.tags.detail(tagId || ""),
-    queryFn: async () => {
-      if (!tagId) return null;
-      const response = await fetchWithAuth(`/api/tags/${tagId}`);
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error);
-      return result.data as TagWithAssignments;
-    },
-    enabled: !!tagId,
-  });
-
-  return {
-    tagData: data,
-    isLoading,
-    error,
-    refetch,
-  };
 };

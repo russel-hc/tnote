@@ -32,36 +32,3 @@ export async function getSession(): Promise<Session | null> {
     workspace: metadata.workspace as string,
   };
 }
-
-export async function getAuthenticatedClient() {
-  const session = await getSession();
-  if (!session) {
-    throw new Error("Unauthorized");
-  }
-
-  const supabase = await createClient();
-
-  return { supabase, session };
-}
-
-export async function requireAuth(allowedRoles?: Array<"owner" | "admin" | "student">) {
-  const session = await getSession();
-
-  if (!session) {
-    throw new Error("Unauthorized");
-  }
-
-  if (allowedRoles && !allowedRoles.includes(session.role)) {
-    throw new Error("Forbidden");
-  }
-
-  return session;
-}
-
-export async function requireOwner() {
-  return requireAuth(["owner"]);
-}
-
-export async function requireAdminOrOwner() {
-  return requireAuth(["owner", "admin"]);
-}

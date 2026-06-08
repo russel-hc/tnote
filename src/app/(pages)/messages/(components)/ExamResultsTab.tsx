@@ -234,11 +234,9 @@ export default function ExamResultsTab() {
                       variant={
                         student.assignmentStatus === "완료"
                           ? "success"
-                          : student.assignmentStatus === "미흡"
+                          : student.assignmentStatus === "검사예정"
                             ? "warning"
-                            : student.assignmentStatus === "검사예정"
-                              ? "info"
-                              : "danger"
+                            : "danger"
                       }
                       size="xs">
                       {student.assignmentStatus}

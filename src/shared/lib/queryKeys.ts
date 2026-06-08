@@ -10,7 +10,6 @@ export const QUERY_KEYS = {
   },
   tags: {
     all: ["tags"] as const,
-    detail: (id: string) => ["tags", "detail", id] as const,
   },
   students: {
     all: ["students"] as const,
@@ -23,14 +22,12 @@ export const QUERY_KEYS = {
   courses: {
     all: ["courses"] as const,
     forStudentsFilter: ["courses-for-students-filter"] as const,
-    forRetakesFilter: ["courses-for-retakes-filter"] as const,
     forMessages: ["courses-for-messages"] as const,
     forAssign: ["courses-for-assign"] as const,
     detail: (id: string) => ["courses", "detail", id] as const,
   },
   clinics: {
     all: ["clinics"] as const,
-    detail: (id: string) => ["clinics", "detail", id] as const,
     attendance: (clinicId: string, date: string) => ["clinics", "attendance", clinicId, date] as const,
     recentAttendance: ["clinics", "recent-attendance"] as const,
     requiredAbsent: ["clinics", "required-absent"] as const,
@@ -38,17 +35,13 @@ export const QUERY_KEYS = {
   retakes: {
     all: ["retakes"] as const,
     byFilter: (filter: string) => ["retakes", filter] as const,
-    byStatus: (status: string) => ["retakes", "status", status] as const,
-    byDateRange: (startDate: string, endDate: string) => ["retakes", "dateRange", startDate, endDate] as const,
     history: (retakeId: string) => ["retake-history", retakeId] as const,
     historyAll: ["retake-history-all"] as const,
     forMessages: (status: string, managementStatus: string) =>
       ["retakes-for-messages", status, managementStatus] as const,
   },
   assignments: {
-    all: ["assignments"] as const,
     byCourse: (courseId: string) => ["assignments", "byCourse", courseId] as const,
-    detail: (id: string) => ["assignments", "detail", id] as const,
     submissions: (assignmentId: string) => ["assignments", "submissions", assignmentId] as const,
     forAssign: (courseId: string) => ["assignments-for-assign", courseId] as const,
   },
@@ -59,11 +52,9 @@ export const QUERY_KEYS = {
     historyAll: ["assignment-task-history-all"] as const,
   },
   exams: {
-    all: ["exams"] as const,
     byCourse: (courseId: string) => ["exams", courseId] as const,
     forMessages: (courseId: string) => ["exams-for-messages", courseId] as const,
     forAssign: (courseId: string) => ["exams-for-assign", courseId] as const,
-    detail: (examId: string) => ["exams", "detail", examId] as const,
     scores: (examId: string) => ["exams", "scores", examId] as const,
     scoresForAssign: (examId: string) => ["exam-scores-for-assign", examId] as const,
     assignments: (examId: string) => ["exams", "assignments", examId] as const,

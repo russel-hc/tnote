@@ -1,24 +1,32 @@
 import { NextResponse } from "next/server";
 import { type ApiContext, withLogging } from "@/shared/lib/api/withLogging";
+import { fetchAllRows } from "@/shared/lib/supabase/pagination";
 
 const handleGet = async ({ supabase, session }: ApiContext) => {
-  const { data: retakeIds } = await supabase
-    .from("RetakeAssignments")
-    .select(
-      `
-      id,
-      student:Users!RetakeAssignments_student_id_fkey!inner(id, name, workspace),
-      exam:Exams!inner(
+  const retakeIds = await fetchAllRows<{
+    id: string;
+    student: unknown;
+    exam: unknown;
+  }>(() =>
+    supabase
+      .from("RetakeAssignments")
+      .select(
+        `
         id,
-        name,
-        exam_number,
-        course:Courses!inner(id, name, workspace)
+        student:Users!RetakeAssignments_student_id_fkey!inner(id, name, workspace),
+        exam:Exams!inner(
+          id,
+          name,
+          exam_number,
+          course:Courses!inner(id, name, workspace)
+        )
+      `,
       )
-    `,
-    )
-    .eq("student.workspace", session.workspace);
+      .eq("student.workspace", session.workspace)
+      .order("id", { ascending: true }),
+  );
 
-  if (!retakeIds || retakeIds.length === 0) {
+  if (retakeIds.length === 0) {
     return NextResponse.json({ data: [] });
   }
 

@@ -103,7 +103,7 @@ export interface Assignment {
   updated_at: string;
 }
 
-export type AssignmentSubmissionStatus = "완료" | "미흡" | "미제출" | "검사예정";
+export type AssignmentSubmissionStatus = "완료" | "미흡" | "미제출" | "검사예정" | "결석";
 
 export interface Exam {
   id: string;
@@ -254,13 +254,6 @@ export interface CalendarEvent {
 }
 
 export type RecipientType = "student" | "parent" | "both";
-
-export interface SendMessageRequest {
-  recipientType: RecipientType;
-  recipientIds: string[];
-  text: string;
-  subject?: string;
-}
 
 export interface SendMessageResponse {
   success: boolean;

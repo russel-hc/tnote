@@ -22,23 +22,6 @@ export interface SendSMSResult {
   error?: string;
 }
 
-export interface BulkSendSMSParams {
-  recipients: string[];
-  text: string;
-  from: string;
-  subject?: string;
-  credentials: SolapiCredentials;
-}
-
-export interface BulkSendSMSResult {
-  success: boolean;
-  total: number;
-  successCount: number;
-  failCount: number;
-  groupId?: string;
-  error?: string;
-}
-
 const createMessageService = (credentials: SolapiCredentials): SolapiMessageService => {
   return new SolapiMessageService(credentials.apiKey, credentials.apiSecret);
 };
@@ -128,58 +111,5 @@ export const sendSMS = async ({ to, text, from, subject, credentials }: SendSMSP
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다.";
     return { success: false, error: errorMessage };
-  }
-};
-
-export const sendBulkSMS = async ({
-  recipients,
-  text,
-  from,
-  subject,
-  credentials,
-}: BulkSendSMSParams): Promise<BulkSendSMSResult> => {
-  if (!from) {
-    return {
-      success: false,
-      total: recipients.length,
-      successCount: 0,
-      failCount: recipients.length,
-      error: "발신번호가 설정되지 않았습니다.",
-    };
-  }
-
-  const messageService = createMessageService(credentials);
-
-  try {
-    const cleanedFrom = from.replace(/-/g, "");
-    const messages = recipients.map((to) => ({
-      to: to.replace(/-/g, ""),
-      from: cleanedFrom,
-      text,
-      ...(subject && { subject }),
-    }));
-
-    const result = await messageService.send(messages);
-
-    const successCount = result.groupInfo.count.registeredSuccess;
-    const failCount = result.groupInfo.count.registeredFailed;
-
-    return {
-      success: failCount === 0,
-      total: recipients.length,
-      successCount,
-      failCount,
-      groupId: result.groupInfo.groupId,
-    };
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다.";
-
-    return {
-      success: false,
-      total: recipients.length,
-      successCount: 0,
-      failCount: recipients.length,
-      error: errorMessage,
-    };
   }
 };

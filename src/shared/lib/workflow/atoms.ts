@@ -16,10 +16,6 @@ export const createWorkflowFormAtoms = () => ({
   postponeDateAtom: atom(""),
   postponeNoteAtom: atom(""),
   completeNoteAtom: atom(""),
-  selectedCourseAtom: atom(""),
-  selectedStudentsAtom: atom<string[]>([]),
-  scheduledDateAtom: atom(""),
-  assignSearchQueryAtom: atom(""),
   editDateAtom: atom(""),
 });
 

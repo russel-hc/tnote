@@ -29,9 +29,10 @@ interface SubmissionModalProps {
 
 const SUBMISSION_STATUS_META = {
   완료: { variant: "success", label: "완료" },
-  미흡: { variant: "warning", label: "미흡" },
+  미흡: { variant: "danger", label: "미흡" },
   미제출: { variant: "danger", label: "미제출" },
-  검사예정: { variant: "info", label: "검사예정" },
+  결석: { variant: "danger", label: "결석" },
+  검사예정: { variant: "warning", label: "검사예정" },
   미배정: { variant: "neutral", label: "미배정" },
 } as const;
 
